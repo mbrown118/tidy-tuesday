@@ -82,10 +82,30 @@ motorcycle_survive <- all_accidents %>%
   )) %>% 
   filter(death_yr == 0.00 | death_yr == 8888)
 
-motorcycle_survive %>% 
+motorcycle_survive %>%
   ggplot(aes(rest_use)) +
-  geom_bar()
+  geom_bar() +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 9)) +
+  theme_minimal() +
+  geom_text(
+    stat = "count",
+    aes(label = after_stat(count)),
+    vjust = -0.75
+  ) +
+  scale_y_continuous(limits = c(0, 42000)) +
+  xlab(label = "Helmet Use") +
+  labs(title = "Motorcycle crash survivors since 1991")
 
-motorcycle_deaths %>% 
+motorcycle_deaths %>%
   ggplot(aes(rest_use)) +
-  geom_bar()
+  geom_bar() +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 9)) +
+  theme_minimal() +
+  geom_text(
+    stat = "count",
+    aes(label = after_stat(count)),
+    vjust = -0.75
+  ) +
+  scale_y_continuous(limits = c(0, 42000)) + 
+  xlab(label = "Helmet Use") +
+  labs(title = "Motorcycle deaths since 1991")
