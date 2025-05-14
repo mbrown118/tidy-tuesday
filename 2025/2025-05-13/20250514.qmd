@@ -1,0 +1,46 @@
+
+
+
+
+```{r}
+
+library(tidyverse)
+library(summarytools)
+
+vesuvius <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv')
+
+
+```
+
+
+```{r}
+
+vesuvius <- vesuvius %>% 
+    mutate(depth_km_neg = depth_km * -1)
+
+## get maximum depth from vesuvius dataset
+max_depth <- vesuvius %>%
+    filter(!is.na(depth_km_neg)) %>% 
+    filter(depth_km_neg == min(depth_km_neg)) %>% 
+    pull(depth_km_neg)
+
+```
+
+
+
+
+```{r}
+
+vesuvius %>% 
+    filter(!is.na(depth_km_neg)) %>%
+    filter(!is.na(time)) %>%
+    filter(time > as_date("20240101") & time < as_date("20241231")) %>%
+    ggplot(aes(x=time, y = depth_km_neg)) + 
+    geom_line() +
+    scale_x_datetime(date_breaks = "1 month", 
+    date_labels = "%b %Y") +
+    geom_hline(yintercept = max_depth, color = "orange") +
+    annotate(x = as_datetime("20240201"), y = -8, label = "Maximum depth of activity\n between 2011 and 2024", geom = "text") +
+    theme_minimal()
+
+```
